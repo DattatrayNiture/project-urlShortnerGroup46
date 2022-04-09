@@ -46,8 +46,9 @@ const SET_EXP = promisify(redisClient.expire).bind(redisClient)
 const createUrl = async (req, res) => {
 
   try {
+
     const keysArray = Object.keys(req.body)
-    console.log(keysArray)
+    //console.log(keysArray)
     if (!keysArray.length) {
       return res.status(400).send({ status: false, message: "request body is empty please provide longUrl" })
     }
@@ -57,8 +58,9 @@ const createUrl = async (req, res) => {
     if (!validator.isValid(longUrl)) {
       return res.status(400).send({ status: false, message: "longUrl is not present please provide longUrl" })
     }
+    
     if (!(keysArray.length === 1 && keysArray.includes("longUrl"))) {
-      return res.status(400).send({ status: false, message: "Error!: Invalid input Only longUrl is accepted" })
+      return res.status(400).send({ status: false, message: "Error!: Invalid input, Only longUrl is accepted" })
     }
     if (!validUrl.isUri(longUrl)) {
       return res.status(400).send({ status: false, message: "invalid url please provide valid url" })
@@ -68,7 +70,7 @@ const createUrl = async (req, res) => {
     let urlCode = shortId.generate().toLowerCase();
 
 
-    console.log(urlCode)
+    //console.log(urlCode)
 
     let url = await urlModel.findOne({ longUrl }).select({ _id: 0, __v: 0 });
     //It describes the internal revision of a document. This __v field is used to track the revisions of a document. By default, its value is zero.
@@ -89,7 +91,9 @@ const createUrl = async (req, res) => {
         let againDuplicate = await urlModel.findOne({ shortUrl })
 
         if (againDuplicate) {
+
           return generateUrl()
+          
             }
         return `${base}/${urlCode}`;
 
